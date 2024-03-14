@@ -5,16 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-	providedIn: 'root',
+  providedIn: 'root',
 })
 export class BlogService {
-	constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-	getBlogs(): Observable<Blog[]> {
-		return this.http.get<Blog[]>(`${environment.apiUrl}/blogs`);
-	}
+  getBlogs(): Observable<Blog[]> {
+    return this.http.get<Blog[]>(`${environment.apiUrl}/blogs`);
+  }
 
-  createBlog(blog: Blog): Observable<Blog> {
+  createBlog(blog: FormData): Observable<Blog> {
     return this.http.post<Blog>(`${environment.apiUrl}/blogs`, blog);
   }
 }

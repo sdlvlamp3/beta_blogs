@@ -21,18 +21,32 @@ export class CreateBlogComponent {
     title: new FormControl('', Validators.required),
     content: new FormControl('', Validators.required),
   });
+  selectedFile: File | null = null;
 
   constructor(private blogService: BlogService, private router: Router) {}
 
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files[0]) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
   createBlog() {
-    this.blogService.createBlog(this.blogForm.value).subscribe({
-      next: (res) => {
-        console.log('Blog created!');
-        this.router.navigate(['/'])
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    })
+    if (this.blogForm.valid && this.selectedFile) {
+      const formData = new FormData();
+      formData.append('title', this.blogForm.get('title')!.value!);
+      formData.append('content', this.blogForm.get('content')!.value!);
+      formData.append('cover_image', this.selectedFile, this.selectedFile.name);
+
+      this.blogService.createBlog(formData).subscribe({
+        next: (res) => {
+          console.log('Blog created!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+    }
   }
 }
